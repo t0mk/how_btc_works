@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>How Bitcoin Works</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./dist/reset.css" />
+    <link rel="stylesheet" href="./dist/reveal.css" />
+    <link rel="stylesheet" href="./dist/theme/league.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/github.css" />
+
+    <link rel="stylesheet" href="./_assets/night.css" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+## How ₿ Works
+
+Tomáš Karásek
+
+Coding Sauna @TribeTampere 11.4.2022
+</script></section><section  data-markdown><script type="text/template">
+## Idea
+
+- [Satoshi Nakamoto's paper from 2008](https://bitcoin.org/bitcoin.pdf)
+- To send online payments securely without trusting a third party
+- Using a resource of known supply (reasonably rare)
+- Use cryptography instead of 3rd party trust: hashing, <a href="https://en.wikipedia.org/wiki/Public-key_cryptography" target=_blank>pub keys</a>
+- Digital signatures, transactions, blockchain, proof-of-work
+- Bitcoin network (nodes running bitcoin-core), miners
+</script></section><section  data-markdown><script type="text/template">
+## Transactions
+
+- tell that owner of some address authorized transfer of coin to another address
+- use digital signatures to prove ownership
+- input txs (UTXOs), outputs, signatures
+- txs sent to a node, node propagates it on p2p network
+- tx doesn't contain any sensitive data
+- <a href="https://i.imgur.com/ijuaCtz.png" target=_blank>visually<a>, <a href="https://btc5.trezor.io/tx/b43287315ea23b7d27eda4360cac9cd97eebababbbc91d9edaa1339e6699b770" target=_blank>real tx in explorer</a>(247 bytes)
+</script></section><section  data-markdown><script type="text/template">
+## The ledger
+
+- Data structure (file) containing all the valid transactions in ₿
+- The currency ⇔ History of transactions 
+- Organized in chain of blocks, for integrity and to allow appending
+- All the nodes in _B_ network keep an up-to-date copy
+- ~400 GB as of April 2022, growing every 10 minutes
+
+- Wallet balance ⇔ sum of unspent transactions outputs (UTXOs) for this address
+- <a href="https://www.oreilly.com/library/view/mastering-bitcoin/9781491902639/images/msbt_0701.png" target=_blank>visualization</a>
+
+</script></section><section  data-markdown><script type="text/template">
+## Consensus
+
+- Anyone can broadcast a transation
+- How can every ₿ node have a copy of blockhain that looks the same?
+- How to ensure new txs are appended to blockchain?
+
+- Rules for
+  - appending to blockchain
+  - supply of new coin
+  - keeping blockchain copy up-to-date
+
+- We trust ledger with the most computational effort, and we reward it.
+- We need to define a proof of exercised effort
+</script></section><section  data-markdown><script type="text/template">
+## SHA256
+
+- Cryptographic hash function
+- arbitrary binary input (file) => 256 bit (32 bytes) digest/hash 
+- 016fd54c348489fbde7fa499f24a982e98dad8b86abee4cbbf87b91bdfd8e24b
+- features:
+    - <a href="https://asciinema.org/a/0uUGoo8fiTcYbvrPtU9VFZGqe" target=_blank>any (small/big) change in input => large change in hash</a>
+    - infeasible to reverse (to find input{s} based on hash)
+    - no assumptions hash based on input
+    - infeasible to find 2 inputs with the same hash (collision)
+- <a href="https://pbs.twimg.com/media/DgxA-pBWkAE7kST?format=jpg&name=large" target=_blank>bitwise operations with 32bit registers, loop of xors, rotations, ⊕s</a>
+</script></section><section  data-markdown><script type="text/template">
+<iframe width="1600" height="700"
+src="https://www.youtube.com/embed/bBC-nXj3Ng4?start=764"
+title="YouTube video player" frameborder="0" 
+allow="clipboard-write; encrypted-media; picture-in-picture">
+  </iframe>
+</script></section><section  data-markdown><script type="text/template">
+## Mining (PoW)
+
+- ₿ mining: collecting valid transactions, finding valid block hash below some difficulty threshold as a proof of work (->vid)
+- No other point of the work besides the proof
+- First transaction in the block sends new coin to miner who discovered the block
+- When new <a href="https://btc5.trezor.io/block/702122" target=_blank>block</a> discovered, it's broadcasted and forwarded
+- Any node can check the block integrity and whether the block hash is valid (cheap) <= Proof-of-Work
+- When new valid <a href="https://www.oreilly.com/library/view/mastering-bitcoin/9781491902639/images/msbt_0701.png" target=_blank>block</a> appears, other miners throw away txs from the new block, and start mining above it
+- "hashing power" of the ₿ network changes. The difficulty (length of zero prefix) changes too.
+</script></section><section  data-markdown><script type="text/template">
+<iframe width="1600" height="700"
+src="https://www.youtube.com/embed/bBC-nXj3Ng4?start=1124"
+title="YouTube video player" frameborder="0" 
+allow="clipboard-write; encrypted-media; picture-in-picture">
+  </iframe>
+</script></section><section  data-markdown><script type="text/template">
+## Reflection on PoW 
+
+- What does PoW solve for consensus
+- More blocks discovered at the same time
+- If we decide to trust the chain with the most effort put into it, and majority is honest, fraud is computationally infeasible.
+- Fraud will hurt trust in currency -> price drop.
+
+</script></section><section  data-markdown><script type="text/template">
+## Bitcoin Network
+
+- To connect to other nodes in the _B_ network
+- To listen for new txs, validate them, and propagate
+- To keep an up-to-date copy of blockhain
+- Some nodes are mining. When new valid block is found, broadcast</script></section><section  data-markdown><script type="text/template">
+## History
+
+- Bitcoin was first, many followed
+- [First block](https://bitaps.com/0) mined on 2009-01-03
+- [First transaction](https://bitaps.com/f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16) in [block 170](https://bitaps.com/170) (mined on 2009-01-12)
+- Couple of forks,
+- Halving every 210,000 blocks (~4 years): 50 BTC -> 2013 | 25 BTC | 2016 | 12.5 | 2020 | 6.25 | 2023 | 3.125 ...
+- Last BTC will be mined in ~2140. After that miners will collect only tx rewards.
+</script></section><section  data-markdown><script type="text/template">
+## Omitted
+
+- Attacks?
+- Alternative hash functions
+- Wallets - public-key cryptography
+- Transaction script
+- Forks
+</script></section><section  data-markdown><script type="text/template">
+## Sources
+
+- [But how does bitcoin actually work?, YouTube vid from 3Blue1Brown](https://www.youtube.com/watch?v=bBC-nXj3Ng4)
+- [Mastering Bitcoin book, 2004, O'Reilly Media](https://www.oreilly.com/library/view/mastering-bitcoin/9781491902639/)
+- What happens if..? [Protocol rules](https://en.bitcoin.it/wiki/Protocol_rules)
+</script></section></div>
+    </div>
+
+    <script src="./dist/reveal.js"></script>
+
+    <script src="./plugin/markdown/markdown.js"></script>
+    <script src="./plugin/highlight/highlight.js"></script>
+    <script src="./plugin/zoom/zoom.js"></script>
+    <script src="./plugin/notes/notes.js"></script>
+    <script src="./plugin/math/math.js"></script>
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath
+        ]
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {}, queryOptions);
+    </script>
+
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>
